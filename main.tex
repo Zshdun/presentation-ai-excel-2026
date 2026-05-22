@@ -48,7 +48,10 @@
 \DeclareMathSymbol{\varphi}{\mathord}{greek}{"27}
 
 \title{Интеллектуальный ассистент для~работы с~Microsoft Excel при~помощи больших языковых моделей}
-\author{Самойлов Даниил}
+\author{%
+    Выполнил студент группы 932202 Самойлов Даниил\\
+    Научный руководитель: Пожидаев Михаил Сергеевич
+}
 \date{\today}
 
 \begin{document}
@@ -90,12 +93,107 @@
 %\end{figure}
 \end{frame}
 
+
 \begin{frame}
 \frametitle{Компоненты системы}
 \framesubtitle{Структура взаимодействия компонентов системы}
 %\begin{figure}[h]
 %\includegraphics[width=9cm,height=5cm,keepaspectratio]{service-comp.pdf}
 %\end{figure}
+\end{frame}
+
+\begin{frame}
+\frametitle{Стек для разработки}
+\framesubtitle{xlwings - библиотека которая связывает Python и Microsoft Excel}
+    xlwings выступает в роли набора инструментов (tools), которые ИИ-помощник вызывает для чтения, анализа и изменения таблиц в реальном времени. (на рисунке ниже я просто показал интерфейс xlwings когда он запущен вместе с эксель)
+
+    \vspace{0.5cm}
+
+    \centering
+    \includegraphics[width=1\textwidth]{wings.png}
+\end{frame}
+
+\begin{frame}
+\frametitle{Стек для разработки}
+\framesubtitle{Языковые модели на основе OpenAI API}
+    Тут наверное опишу что такое языковые модели и какие я буду использовать (на основе презентации Никиты Кленского)
+\end{frame}
+
+\begin{frame}{Основные инструменты}
+    \scriptsize
+    \setlength{\tabcolsep}{3pt}
+    \renewcommand{\arraystretch}{0.85}
+    \centering
+    \begin{tabular}{|p{0.3\textwidth}|p{0.4\textwidth}|p{0.25\textwidth}|}
+        \hline
+        \textbf{Название инструмента} & \textbf{Описание} & \textbf{Аргументы} \\
+        \hline
+        \texttt{write\_cell} & Записывает заданное значение в указанную ячейку. & \texttt{cell\_coord}, \texttt{cell\_value} \\
+        \hline
+        \texttt{edit\_text\_format} & Изменяет стиль шрифта (жирный, курсив, подчеркивание) для диапазона. & \texttt{target\_range}, \texttt{format\_type}, \texttt{status} \\
+        \hline
+        \texttt{change\_cell\_color\_rgb} & Изменяет цвет заливки фона диапазона. & \texttt{target\_range}, \texttt{rgb\_values}, \texttt{clear\_color} \\
+        \hline
+        \texttt{highlight\_matching\_rows} & Выделяет цветом строки, соответствующие определенному условию. & \texttt{range\_address}, \texttt{filter\_col}, \texttt{operator}, \texttt{value}, \texttt{highlight\_color} \\
+        \hline
+        \texttt{create\_excel\_chart} & Создает диаграмму в формате Excel на основе диапазона данных. & \texttt{chart\_type}, \texttt{data\_range}, \texttt{title}, \texttt{location} \\
+        \hline
+        \texttt{find\_and\_replace} & Выполняет массовую замену текста в определенном диапазоне или столбце. & \texttt{target\_range}, \texttt{find\_text}, \texttt{replace\_text}, \texttt{match\_entire\_cell} \\
+        \hline
+        \texttt{remove\_duplicates} & Очищает таблицу, удаляя дубликаты строк на основе критериев столбца. & \texttt{table\_range}, \texttt{columns\_to\_check}, \texttt{has\_headers} \\
+        \hline
+    \end{tabular}
+\end{frame}
+
+\begin{frame}
+\frametitle{Пример использования}
+\framesubtitle{Без интеллектуального ассистента}
+    Здесь будут шаги которые пользователь экселя должен сделать чтобы выделить строки по определенному условию. Снизу изображение, на котором эти шаги можно показать.
+
+    \vspace{0.5cm}
+
+    \centering
+    \includegraphics[width=1\textwidth]{wings.png}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Пример использования}
+\framesubtitle{с интеллектуальным ассистентом}
+
+\begin{enumerate}
+    \item
+    Запрос:
+    
+    Выдели все строки, в которых Курс больше 80 светло-красным цветом.
+    Таблица начинается в ячейке C6
+
+    \item
+    Ответ LLM:
+\begin{verbatim}
+Tool Name: highlight_matching_rows
+Arguments String:
+{"range_address":"C6","filter_col":"Курс",
+"operator":">","value":"80",
+"highlight_color":[255,192,203]}
+\end{verbatim}
+   \item
+    Использование шаблона highlight\_matching\_rows для выполнения функции с использованием полученных аргументов. 
+\end{enumerate}
+\end{frame}  
+
+  \begin{frame}
+\frametitle{Результат работы ассистента}
+\framesubtitle{Ассистент покрасил строки валют с курсом выше 80}
+
+    \centering
+    \includegraphics[width=0.8\textwidth]{highlightresult.png}
+\end{frame}  
+
+\begin{frame}
+\frametitle{Сравнение различных языковых моделей}
+\framesubtitle{основные качества - корректность и скорость работы}
+    Здесь будет таблица, в которой я буду сравнивать работу  LLM на различных тестах. Буду записывать, правильно ли было выполнено задание и скорость выполнения. Постараюсь найти хотя бы один вариант который какая-то одна модель корректно выполнит а другая нет.
+
 \end{frame}
 
 \begin{frame}
@@ -107,7 +205,7 @@
 Разработан интеллектуальный ассистент для~управления Microsoft Excel с~обработкой запросов на~естественном языке. 
   }
   \item {
-Организовано взаимодействие с~zязыковыми моделями при~помощи OpenAI~API.
+Организовано взаимодействие с~языковыми моделями при~помощи OpenAI~API.
   }
   \item {
 Работа ассистента протестирована на~проверочных примерах с~получением планируемого результата.
