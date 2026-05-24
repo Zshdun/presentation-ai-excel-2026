@@ -8,6 +8,14 @@
 \usepackage{psfrag}
  \usepackage{hyperref}
 \usepackage[normalem]{ulem}
+\usepackage{xcolor}
+\usepackage{fancyvrb}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage[table]{xcolor}
+\usepackage{ragged2e}
+
 
 \beamertemplatenavigationsymbolsempty
 \setbeamertemplate{footline}[frame number]
@@ -62,7 +70,9 @@
 \framesubtitle{Проблематика, объект и предмет  исследования}
 
 Управление Microsoft Excel с~помощью интеллектуальных ассистентов становится важным навыком в~современной аналитике,
-т.~к. такие инструменты позволяют мгновенно автоматизировать рутинные операции, создавать макросы на~естественном языке и быстро интерпретировать большие массивы данных
+т.~к. такие инструменты позволяют мгновенно автоматизировать рутинные операции, создавать макросы на~естественном языке и быстро интерпретировать большие массивы данных.
+
+
 Это принципиально меняет работу с~таблицами и роль специалиста:
 он фокусируется на~логике анализа, проверке гипотез и принятии решений.
 
@@ -86,37 +96,46 @@
 \end{frame}
 
 \begin{frame}
-\frametitle{Обработка запроса}
-\framesubtitle{последовательность обмена информацией для~выполнения команды}
-%\begin{figure}[h]
-%\includegraphics[width=9cm,height=5cm,keepaspectratio]{tools-seq.pdf}
-%\end{figure}
+\frametitle{Механизм Tool Calling}
+\framesubtitle{Также известный как Function Calling}
+  \begin{itemize}
+    \item \textbf{Tool calling} — это механизм, который позволяет языковой модели \emph{вызывать внешние инструменты}: API, функции, базы данных, калькулятор, поиск и т.д.
+    
+    \item Модель сама выбирает инструмент, передаёт ему аргументы и затем использует полученный результат в ответе.
+    
+    \item Впервые был представлен в июне 2023 года компанией OpenAI под названием Function Calling
+    \end{itemize}
 \end{frame}
 
-
-\begin{frame}
-\frametitle{Компоненты системы}
-\framesubtitle{Структура взаимодействия компонентов системы}
-%\begin{figure}[h]
-%\includegraphics[width=9cm,height=5cm,keepaspectratio]{service-comp.pdf}
-%\end{figure}
-\end{frame}
 
 \begin{frame}
 \frametitle{Стек для разработки}
 \framesubtitle{xlwings - библиотека которая связывает Python и Microsoft Excel}
-    xlwings выступает в роли набора инструментов (tools), которые ИИ-помощник вызывает для чтения, анализа и изменения таблиц в реальном времени. (на рисунке ниже я просто показал интерфейс xlwings когда он запущен вместе с эксель)
-
+\begin{itemize}
+    \item 
+    Библиотека xlwings выступает в роли набора инструментов (tools), которые ИИ-ассистент вызывает для чтения, анализа и изменения таблиц в реальном времени.
+    \end{itemize}
+    
     \vspace{0.5cm}
 
     \centering
     \includegraphics[width=1\textwidth]{wings.png}
 \end{frame}
 
+
+%\begin{frame}
+%\frametitle{Компоненты системы}
+%\framesubtitle{Структура взаимодействия компонентов системы}
+%\begin{figure}[h]
+%\includegraphics[width=9cm,height=5cm,keepaspectratio]{service-comp.pdf}
+%\end{figure}
+%\end{frame}
+
 \begin{frame}
-\frametitle{Стек для разработки}
-\framesubtitle{Языковые модели на основе OpenAI API}
-    Тут наверное опишу что такое языковые модели и какие я буду использовать (на основе презентации Никиты Кленского)
+\frametitle{Обработка запроса}
+\framesubtitle{последовательность обмена информацией для~выполнения команды}
+    \centering
+    \includegraphics[width=0.9\textwidth]{sequencediagram.png}
 \end{frame}
 
 \begin{frame}{Основные инструменты}
@@ -124,7 +143,7 @@
     \setlength{\tabcolsep}{3pt}
     \renewcommand{\arraystretch}{0.85}
     \centering
-    \begin{tabular}{|p{0.3\textwidth}|p{0.4\textwidth}|p{0.25\textwidth}|}
+    \begin{tabular}{|p{0.32\textwidth}|p{0.4\textwidth}|p{0.25\textwidth}|}
         \hline
         \textbf{Название инструмента} & \textbf{Описание} & \textbf{Аргументы} \\
         \hline
@@ -145,37 +164,53 @@
     \end{tabular}
 \end{frame}
 
-\begin{frame}
+\begin{frame}[allowframebreaks]
 \frametitle{Пример использования}
 \framesubtitle{Без интеллектуального ассистента}
-    Здесь будут шаги которые пользователь экселя должен сделать чтобы выделить строки по определенному условию. Снизу изображение, на котором эти шаги можно показать.
+    \begin{itemize}
+    \item \textbf{Задание}: выделить строки валют с курсом больше 80.
 
+    \item \textbf{Действия пользователя}:
+    \end{itemize}
+    \begin{enumerate}
+  \item {
+Выделить диапазон
+  }
+  \item {
+Создать новое правило условного форматирования 
+ }
     \vspace{0.5cm}
 
+    \includegraphics[width=0.5\textwidth]{highlightmanual1.png}
+        \vspace{0.5cm}
+
+    \item Настроить формулу - указать столбец сравниваемых значений и сравнение
+    \item Настроить формат - заливка и ее цвет
+\end{enumerate}
     \centering
-    \includegraphics[width=1\textwidth]{wings.png}
+    \includegraphics[width=1\textwidth]{highlightmanual2.png}
 \end{frame}
 
 \begin{frame}[fragile]
-\frametitle{Пример использования}
-\framesubtitle{с интеллектуальным ассистентом}
+\frametitle{Пример использования III}
+\framesubtitle{С интеллектуальным ассистентом}
 
 \begin{enumerate}
     \item
     Запрос:
     
-    Выдели все строки, в которых Курс больше 80 светло-красным цветом.
-    Таблица начинается в ячейке C6
+    Выдели все строки, в которых \textcolor{green}{Курс} \textit{больше} \textcolor{purple}{80} \textcolor{red}{светло-красным цветом}.
+    Таблица начинается в ячейке \textcolor{blue}{C6}
 
     \item
     Ответ LLM:
-\begin{verbatim}
+\begin{Verbatim}[commandchars=\\\{\}]
 Tool Name: highlight_matching_rows
 Arguments String:
-{"range_address":"C6","filter_col":"Курс",
-"operator":">","value":"80",
-"highlight_color":[255,192,203]}
-\end{verbatim}
+(\textcolor{blue}{"range_address":"C6"},\textcolor{green}{"filter_col":"Курс"},
+ \textit{"operator":">"},\textcolor{purple}{"value":"80"},
+\textcolor{red}{"highlight_color":[255,192,203]})
+\end{Verbatim}
    \item
     Использование шаблона highlight\_matching\_rows для выполнения функции с использованием полученных аргументов. 
 \end{enumerate}
@@ -190,9 +225,32 @@ Arguments String:
 \end{frame}  
 
 \begin{frame}
-\frametitle{Сравнение различных языковых моделей}
-\framesubtitle{основные качества - корректность и скорость работы}
-    Здесь будет таблица, в которой я буду сравнивать работу  LLM на различных тестах. Буду записывать, правильно ли было выполнено задание и скорость выполнения. Постараюсь найти хотя бы один вариант который какая-то одна модель корректно выполнит а другая нет.
+\frametitle{Сравнение языковых моделей}
+\framesubtitle{При вызове инструмента highlight\_matching\_rows}
+
+\small
+
+\textbf{Запрос:} Покрась все строчки, в которых значение Курс больше, чем курс доллара к рублю в 2020. Таблица начинается в C6
+
+\vspace{0.8em}
+
+\centering
+\renewcommand{\arraystretch}{1.35}
+\begin{tabular}{|p{0.17\textwidth}|p{0.33\textwidth}|p{0.12\textwidth}|p{0.13\textwidth}|p{0.15\textwidth}|}
+    \hline
+    \textbf{Модель} & \textbf{Описание модели} & \textbf{Время работы} & \textbf{Аргумент Value} & \textbf{Стоимость в валюте BotHub*} \\
+    \hline
+    \texttt{claude sonnet-4.5} & {Мощная современная модель} & 2.71 с & 73 & 3944 \\
+    \hline
+    \texttt{gpt-4o-mini} & Малая модель прошлого поколения & 1.51 с & 2020 & 63 \\
+    \hline
+    \texttt{gemini-3.1 flash-lite} & Быстрая модель нового поколения & 2.45 с & 75 & 973 \\
+    \hline
+\end{tabular}
+
+\vspace{0.7em}
+
+{\footnotesize *5000 BotHub Caps $\approx$ 1 рубль}
 
 \end{frame}
 
@@ -210,6 +268,9 @@ Arguments String:
   \item {
 Работа ассистента протестирована на~проверочных примерах с~получением планируемого результата.
     }
+   \item {
+Произведено сравнение работы ассистента при использовании различных языковых моделей.
+    }
     \end{enumerate}
 \end{frame}
 
@@ -218,7 +279,5 @@ Arguments String:
 {\Large Спасибо за~внимание!}
     \end{center}
   \end{frame}
-
-
-
+   
 \end{document}
